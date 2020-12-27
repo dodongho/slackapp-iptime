@@ -12,6 +12,15 @@ This repository comes from my blog posts
 $ pip install -r requirements.txt
 ```
 
+## Configuration
+In code, set your own configurations
+```
+iptime_ip = "192.168.100.1"  # your ipTIME Web IP
+iptime_user = "login-user"  # your ipTIME Login ID
+iptime_password = "login-password"  # your ipTIME Login Password
+token = "xoxb-your-slackapp-token"  # your Slack App token
+port = 8787  # your Slack App Request URL port
+```
 ## Run
 ```bash
 $ python3 slackapp-iptime.py

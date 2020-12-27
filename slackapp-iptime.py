@@ -7,10 +7,11 @@ from flask import Flask
 from slackify import Slackify, Slack, reply_text
 
 # set your own configurations ---------->
-iptime_user = "login-user"
-iptime_password = "login-password"
-token = "xoxb-your-slackapp-token"
-port = 8787
+iptime_ip = "192.168.100.1"  # your ipTIME Web IP
+iptime_user = "login-user"  # your ipTIME Login ID
+iptime_password = "login-password"  # your ipTIME Login Password
+token = "xoxb-your-slackapp-token"  # your Slack App token
+port = 8787  # your Slack App Request URL port
 # <--------------------------------------
 
 app = Flask(__name__)
@@ -29,11 +30,11 @@ def login(name, password):
         'Pragma': 'no-cache',
         'Cache-Control': 'no-cache',
         'Upgrade-Insecure-Requests': '1',
-        'Origin': 'http://192.168.100.1',
+        'Origin': 'http://%s' % iptime_ip,
         'Content-Type': 'application/x-www-form-urlencoded',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-        'Referer': 'http://192.168.100.1/sess-bin/login_session.cgi',
+        'Referer': 'http://%s/sess-bin/login_session.cgi' % iptime_ip,
         'Accept-Language': 'ko-KR,ko;q=0.9',
     }
 
@@ -47,7 +48,7 @@ def login(name, password):
         'captcha_code': ''
     }
 
-    response = requests.post('http://192.168.100.1/sess-bin/login_handler.cgi',
+    response = requests.post('http://%s/sess-bin/login_handler.cgi' % iptime_ip,
                              headers=headers,
                              cookies=cookies,
                              data=data,
@@ -72,11 +73,11 @@ def get_ap_info(cookies):
         'Upgrade-Insecure-Requests': '1',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-        'Referer': 'http://192.168.100.1/sess-bin/login_handler.cgi',
+        'Referer': 'http://%s/sess-bin/login_handler.cgi' % iptime_ip,
         'Accept-Language': 'ko-KR,ko;q=0.9',
     }
 
-    response = requests.get('http://192.168.100.1/sess-bin/login.cgi',
+    response = requests.get('http://%s/sess-bin/login.cgi' % iptime_ip,
                             headers=headers,
                             cookies=cookies,
                             verify=False)
@@ -133,7 +134,7 @@ def get_firewalls(cookies):
         'Upgrade-Insecure-Requests': '1',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-        'Referer': 'http://192.168.100.1/sess-bin/timepro.cgi?tmenu=firewallconf&smenu=firewall',
+        'Referer': 'http://%s/sess-bin/timepro.cgi?tmenu=firewallconf&smenu=firewall' % iptime_ip,
         'Accept-Language': 'ko-KR,ko;q=0.9',
     }
 
@@ -143,7 +144,7 @@ def get_firewalls(cookies):
         ('mode', 'all'),
     )
 
-    response = requests.get("http://192.168.100.1/sess-bin/timepro.cgi",
+    response = requests.get("http://%s/sess-bin/timepro.cgi" % iptime_ip,
                             headers=headers,
                             params=params,
                             cookies=cookies,
@@ -174,11 +175,11 @@ def set_firewall(cookies, firewall, off):
         'Pragma': 'no-cache',
         'Cache-Control': 'no-cache',
         'Upgrade-Insecure-Requests': '1',
-        'Origin': 'http://192.168.100.1',
+        'Origin': 'http://%s' % iptime_ip,
         'Content-Type': 'application/x-www-form-urlencoded',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-        'Referer': 'http://192.168.100.1/sess-bin/timepro.cgi',
+        'Referer': 'http://%s/sess-bin/timepro.cgi' % iptime_ip,
         'Accept-Language': 'ko-KR,ko;q=0.9',
     }
 
@@ -198,7 +199,10 @@ def set_firewall(cookies, firewall, off):
     # 규칙비활성화 (설정 on/off) 하는 값을 설정한다
     data['disabled'] = int(off)
 
-    response = requests.post('http://192.168.100.1/sess-bin/timepro.cgi', headers=headers, cookies=cookies, data=data,
+    response = requests.post('http://%s/sess-bin/timepro.cgi' % iptime_ip,
+                             headers=headers,
+                             cookies=cookies,
+                             data=data,
                              verify=False)
 
 
